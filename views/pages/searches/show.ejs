@@ -12,16 +12,35 @@
   <title>SHOW RESULTS</title>
 </head>
 
+<header>
+  <nav>
+    <ul>
+      <li><a href="/searches/new">Search for New Book</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/searches/show">Show</a></li>
+    </ul>
+  </nav>
+</header>
+
   <body>
     <h1>SEARCH RESULTS HERE</h1>
 
     <ul>
-      <% for(let i in booksToFrontEnd){ %>
+      <% for(let i in books){ %>
       <li>
-        <h2><%= booksToFrontEnd[i].title %></h2>
-        <h4><%= booksToFrontEnd[i].author %></h4>
-        <img src="<%= booksToFrontEnd[i].img %>">
-        <p><%= booksToFrontEnd[i].description %></p>
+        <h2><%= books[i].title %></h2>
+        <h4><%= books[i].author %></h4>
+        <img src="<%= books[i].img %>">
+        <p><%= books[i].description %></p>
+        
+        <form action="/books" method="POST" name="save">
+          <input name="title" type="hidden" value="<%= books[i].title %>">
+          <input name="author" type="hidden" value="<%= books[i].author %>">
+          <input name="isbn" type="hidden" value="<%= books[i].isbn %>">
+          <input name="description" type="hidden" value="<%= books[i].description %>">
+          <button type="submit" name="save">Save to Bookshelf</button>
+        </form>
+
       </li>
      <% } %>
     </ul>

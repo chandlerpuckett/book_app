@@ -6,6 +6,7 @@ const express = require('express');
 const pg = require('pg');
 const cors = require('cors');
 const superagent = require('superagent');
+const { response } = require('express');
 
 require('dotenv').config();
 
@@ -28,17 +29,64 @@ app.use(express.static('./public'));
 
 // ========== routes ========== //
 
-// app.get('/hello', renderHome);
 app.get('/', renderHome);
 app.get('/searches/new', renderSearchField);
+app.get('/books/:id', renderSingleBook);
+
+app.post('/books', saveBook);
+
 app.post('/searches', getBooksFromApi);
 
 // ========== functions ========== //
 
+// -- home page render --
 function renderHome (req,res){
   console.log('----- HOME ROUTE WORKING ------');
-  res.render('./pages/index');
+  const sqlQuery = 'SELECT * FROM books_data';
+
+  client.query(sqlQuery)
+    .then(result => {
+      console.log(result.rows);
+      res.render('./pages/index', { books: result.rows, count : result.rowCount });
+    })
+    .catch(error => errorHandler(error));
 }
+
+// -- single book render --
+function renderSingleBook (req,res){
+  console.log('----- SINGLE BOOK ROUTE WORKING ------');
+
+  let userDetail = req.query.detail;
+
+  const sqlQuery = `SELECT * FROM books_data WHERE id=${userDetail}`;
+
+  client.query(sqlQuery)
+    .then(result => {
+      console.log('RESULT.ROWS: ',result.rows);
+      res.render('./pages/books/show', { books: result.rows});
+    })
+    .catch(error => errorHandler(error));
+
+
+}
+
+// -- save book to DB --
+function saveBook (req,res){
+  console.log('------ SAVE ROUTE IS ALIVE -----');
+  const {author,title,isbn,image_url,synopsis} = req.body;
+  console.log(req.body);
+
+  const sqlQuery = `INSERT INTO books_data 
+    (author, title, isbn, image_url, synopsis) 
+    VALUES ($1, $2, $3, $4, $5)`;
+
+  const valueArray = [author,title,isbn,image_url,synopsis];
+
+  client.query(sqlQuery, valueArray)
+    .then();
+
+}
+
 
 function renderSearchField (req,res){
   console.log('----- SEARCH ROUTE WORKING -----');
@@ -72,10 +120,10 @@ function getBooksFromApi (req,res){
       let bookApiArray = books.map(construct => new Book (construct));
 
       // console.log(books);
-      console.log(bookApiArray);
+      // console.log(bookApiArray);
 
       res.render('./pages/searches/show' , {
-        booksToFrontEnd : bookApiArray
+        books : bookApiArray
       });
 
     })
@@ -106,6 +154,5 @@ function Book (booksJsonData){
 client.connect()
   .then( () => {
     app.listen(PORT, () => console.log(`super tight, running on ${PORT} rad `));
-  })
-  .catch(error => errorHandler(error));
+  });
 
