@@ -1,0 +1,20 @@
+<section>
+
+  <ul>
+    <% books.forEach(book => { %>
+    <li>
+      <h2><%= book.title %></h2>
+      <h3><%= book.author %></h3>
+      <p>ISBN : <%= book.isbn %></p>
+      <img src="<%= book.image_url %>">
+      <p><%= book.synopsis %></p>
+
+      <form action="/books/:id" method="GET" name="detail">
+        <button  name="detail" value="<%= book.id %>">VIEW DETAILS</button>
+      </form>
+
+    </li>
+    <% }) %>
+  </ul>
+
+</section>

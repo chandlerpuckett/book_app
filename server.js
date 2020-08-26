@@ -28,24 +28,43 @@ app.use(express.static('./public'));
 
 // ========== routes ========== //
 
-// app.get('/hello', renderHome);
 app.get('/', renderHome);
 app.get('/searches/new', renderSearchField);
+app.get('/books/:id', renderSingleBook);
+
 app.post('/searches', getBooksFromApi);
 
 // ========== functions ========== //
 
+// -- home page render --
 function renderHome (req,res){
   console.log('----- HOME ROUTE WORKING ------');
-
   const sqlQuery = 'SELECT * FROM books_data';
 
   client.query(sqlQuery)
-    .then(pull => {
-      console.log(pull);
-      res.render('./pages/index');
+    .then(result => {
+      console.log(result.rows);
+      res.render('./pages/index', { books: result.rows, count : result.rowCount });
     })
     .catch(error => errorHandler(error));
+}
+
+// -- single book render --
+function renderSingleBook (req,res){
+  console.log('----- SINGLE BOOK ROUTE WORKING ------');
+
+  let userDetail = req.query.detail;
+
+  const sqlQuery = `SELECT * FROM books_data WHERE id=${userDetail}`;
+
+  client.query(sqlQuery)
+    .then(result => {
+      console.log('RESULT.ROWS: ',result.rows);
+      res.render('./pages/books/show', { books: result.rows});
+    })
+    .catch(error => errorHandler(error));
+
+
 }
 
 function renderSearchField (req,res){
@@ -114,6 +133,5 @@ function Book (booksJsonData){
 client.connect()
   .then( () => {
     app.listen(PORT, () => console.log(`super tight, running on ${PORT} rad `));
-  })
-  .catch(error => errorHandler(error));
+  });
 
