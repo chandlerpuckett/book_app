@@ -30,16 +30,20 @@ app.use(express.static('./public'));
 // ========== routes ========== //
 
 app.get('/hello', renderHome);
-
+app.get('/searches/new', renderSearchField);
 
 
 // ========== functions ========== //
 
 function renderHome (req,res){
-  console.log('HOME ROUTE WORKING');
+  console.log('----- HOME ROUTE WORKING ------');
   res.render('./pages/index');
 }
 
+function renderSearchField (req,res){
+  console.log('----- SEARCH ROUTE WORKING -----');
+  res.render('./pages/searches/new');
+}
 
 
 // ========== constructor ========== //
