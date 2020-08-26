@@ -37,7 +37,15 @@ app.post('/searches', getBooksFromApi);
 
 function renderHome (req,res){
   console.log('----- HOME ROUTE WORKING ------');
-  res.render('./pages/index');
+
+  const sqlQuery = 'SELECT * FROM books_data';
+
+  client.query(sqlQuery)
+    .then(pull => {
+      console.log(pull);
+      res.render('./pages/index');
+    })
+    .catch(error => errorHandler(error));
 }
 
 function renderSearchField (req,res){
