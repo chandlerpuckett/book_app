@@ -29,7 +29,7 @@ app.use(express.static('./public'));
 // ========== routes ========== //
 
 // app.get('/hello', renderHome);
-app.get('/', renderHome);
+app.get('/pages', renderHome);
 app.get('/searches/new', renderSearchField);
 app.post('/searches', getBooksFromApi);
 
@@ -100,9 +100,6 @@ function Book (booksJsonData){
   this.img = book.imageLinks.thumbnail || `https://i.imgur.com/J5LVHEL.jpg`;
 
 }
-
-
-
 
 // ========== listen ========== //
 
