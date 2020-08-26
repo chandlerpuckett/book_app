@@ -99,14 +99,6 @@ function Book (booksJsonData){
 
   this.img = book.imageLinks.thumbnail || `https://i.imgur.com/J5LVHEL.jpg`;
 
-  // if (imgCheck === undefined){
-  //   this.img = `https://i.imgur.com/J5LVHEL.jpg`;
-  // } else {
-  //   let imgKey = Object.keys(imgCheck)[1];
-  //   let imgUrl = imgCheck[imgKey];
-  //   this.img = imgUrl;
-  // }
-
 }
 
 
@@ -117,5 +109,6 @@ function Book (booksJsonData){
 client.connect()
   .then( () => {
     app.listen(PORT, () => console.log(`super tight, running on ${PORT} rad `));
-  });
+  })
+  .catch(error => errorHandler(error));
 
