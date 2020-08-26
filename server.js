@@ -6,6 +6,7 @@ const express = require('express');
 const pg = require('pg');
 const cors = require('cors');
 const superagent = require('superagent');
+const { response } = require('express');
 
 require('dotenv').config();
 
@@ -31,6 +32,7 @@ app.use(express.static('./public'));
 app.get('/', renderHome);
 app.get('/searches/new', renderSearchField);
 app.get('/books/:id', renderSingleBook);
+
 app.post('/books', saveBook);
 
 app.post('/searches', getBooksFromApi);
@@ -70,7 +72,19 @@ function renderSingleBook (req,res){
 
 // -- save book to DB --
 function saveBook (req,res){
-  
+  console.log('------ SAVE ROUTE IS ALIVE -----');
+  const {author,title,isbn,image_url,synopsis} = req.body;
+  console.log(req.body);
+
+  const sqlQuery = `INSERT INTO books_data 
+    (author, title, isbn, image_url, synopsis) 
+    VALUES ($1, $2, $3, $4, $5)`;
+
+  const valueArray = [author,title,isbn,image_url,synopsis];
+
+  client.query(sqlQuery, valueArray)
+    .then();
+
 }
 
 
@@ -106,10 +120,10 @@ function getBooksFromApi (req,res){
       let bookApiArray = books.map(construct => new Book (construct));
 
       // console.log(books);
-      console.log(bookApiArray);
+      // console.log(bookApiArray);
 
       res.render('./pages/searches/show' , {
-        booksToFrontEnd : bookApiArray
+        books : bookApiArray
       });
 
     })
