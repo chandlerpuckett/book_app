@@ -17,7 +17,6 @@ const PORT = process.env.PORT || 3003;
 const client = new pg.Client(process.env.DATABASE_URL);
 client.on('error', console.error);
 
-
 // app inits
 const app = express();
 
