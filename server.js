@@ -31,6 +31,7 @@ app.use(express.static('./public'));
 app.get('/', renderHome);
 app.get('/searches/new', renderSearchField);
 app.get('/books/:id', renderSingleBook);
+app.post('/books', saveBook);
 
 app.post('/searches', getBooksFromApi);
 
@@ -66,6 +67,12 @@ function renderSingleBook (req,res){
 
 
 }
+
+// -- save book to DB --
+function saveBook (req,res){
+  
+}
+
 
 function renderSearchField (req,res){
   console.log('----- SEARCH ROUTE WORKING -----');
