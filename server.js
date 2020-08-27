@@ -74,16 +74,19 @@ function renderSingleBook (req,res){
 function saveBook (req,res){
   console.log('------ SAVE ROUTE IS ALIVE -----');
   const {author,title,isbn,image_url,synopsis} = req.body;
-  console.log(req.body);
 
   const sqlQuery = `INSERT INTO books_data 
     (author, title, isbn, image_url, synopsis) 
     VALUES ($1, $2, $3, $4, $5)`;
 
   const valueArray = [author,title,isbn,image_url,synopsis];
+  const sendDetail = [{author,title,isbn,image_url,synopsis}];
 
   client.query(sqlQuery, valueArray)
-    .then();
+
+    .then(res.render('./pages/books/show',{ books : sendDetail}))
+
+    .catch(error => errorHandler(error));
 
 }
 
@@ -119,9 +122,6 @@ function getBooksFromApi (req,res){
 
       let bookApiArray = books.map(construct => new Book (construct));
 
-      // console.log(books);
-      // console.log(bookApiArray);
-
       res.render('./pages/searches/show' , {
         books : bookApiArray
       });
@@ -142,10 +142,10 @@ function Book (booksJsonData){
 
   this.title = book.title;
   this.author = book.authors;
-  this.description = book.description;
+  this.synopsis = book.description;
   this.isbn = book.industryIdentifiers[0].identifier;
 
-  this.img = book.imageLinks.thumbnail || `https://i.imgur.com/J5LVHEL.jpg`;
+  this.image_url = book.imageLinks.thumbnail || `https://i.imgur.com/J5LVHEL.jpg`;
 
 }
 
