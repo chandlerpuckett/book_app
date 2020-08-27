@@ -6,7 +6,6 @@ const express = require('express');
 const pg = require('pg');
 const cors = require('cors');
 const superagent = require('superagent');
-const { response } = require('express');
 
 require('dotenv').config();
 
@@ -83,8 +82,7 @@ function saveBook (req,res){
   const sendDetail = [{author,title,isbn,image_url,synopsis}];
 
   client.query(sqlQuery, valueArray)
-
-    .then(res.render('./pages/books/show',{ books : sendDetail}))
+    .then(res.render('./pages/books/show', {books : sendDetail}))
 
     .catch(error => errorHandler(error));
 
