@@ -78,7 +78,7 @@ function saveBook (req,res){
     (author, title, isbn, image_url, synopsis) 
     VALUES ($1, $2, $3, $4, $5)`;
 
-  const valueArray = [author,title,isbn,image_url,synopsis];
+  const valueArray = [author,title,isbn,image_url,synopsis.slice(0,254)];
   const sendDetail = [{author,title,isbn,image_url,synopsis}];
 
   client.query(sqlQuery, valueArray)
