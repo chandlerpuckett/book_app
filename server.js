@@ -6,6 +6,7 @@ const express = require('express');
 const pg = require('pg');
 const cors = require('cors');
 const superagent = require('superagent');
+const methodOverride = require('method-override');
 
 require('dotenv').config();
 
@@ -24,17 +25,20 @@ app.set('view engine', 'ejs');
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('./public'));
+app.use(methodOverride('_method'));
 
 
 // ========== routes ========== //
 
 app.get('/', renderHome);
 app.get('/searches/new', renderSearchField);
-app.get('/books/:id', renderSingleBook);
+app.get('/books/:id', renderDetailView);
+app.get('/reveal', displayUpdateForm);
 
 app.post('/books', saveBook);
-
 app.post('/searches', getBooksFromApi);
+
+app.put('/books/:id', updateBookEntry);
 
 // ========== functions ========== //
 
@@ -52,7 +56,7 @@ function renderHome (req,res){
 }
 
 // -- single book render --
-function renderSingleBook (req,res){
+function renderDetailView (req,res){
   console.log('----- SINGLE BOOK ROUTE WORKING ------');
 
   let userDetail = req.query.detail;
@@ -86,6 +90,27 @@ function saveBook (req,res){
 
     .catch(error => errorHandler(error));
 
+}
+
+// -- display update form from button --
+function displayUpdateForm (req,res){
+  console.log('--- BUTTON ROUTE WORKING ---');
+
+  const id = req.query.reveal;
+  const sqlQuery = `SELECT * FROM books_data WHERE id=${id}`;
+
+  client.query(sqlQuery)
+    .then(result => {
+      res.render('./pages/books/edit.ejs', {books : result.rows});
+    })
+    .catch(error => errorHandler(error));
+
+}
+
+// -- update book entry in database --
+function updateBookEntry (req,res){
+  // run database command to update the details of the book
+  // redirect user to the detail view for the book that was just updated
 }
 
 
