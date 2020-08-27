@@ -40,6 +40,14 @@ app.post('/searches', getBooksFromApi);
 
 app.put('/books/:id', updateBookEntry);
 
+/*
+
+/:id (the variable) makes it a variable of whatever we want
+that value will live in the req.params.<id>
+dynamic routing
+
+*/
+
 // ========== functions ========== //
 
 // -- home page render --

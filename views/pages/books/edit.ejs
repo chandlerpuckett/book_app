@@ -2,7 +2,7 @@
 
 <% books.forEach(book => { %>
 
-  <form action="/books/:id" method="PUT" name="update">
+  <form action="/books/<%= book.id %>?_method=PUT" method="POST" name="update">
     <input type="text" name="title" value=" <%= book.title %> " >
     <input type="text" name="author" value=" <%= book.author %> " >
     <input type="text" name="isbn" value=" <%= book.isbn %> " >
@@ -16,4 +16,20 @@
     <button type="submit" name="update">Update Book</button>
   </form>
 
+  <form action="/books/<%= book.id %>?_method=DELETE" method="POST">
+    <input type="submit" value="delete this book">
+  </form>
+
 <% }) %>
+
+
+<!-- 
+
+  hide / show form with button
+  CSS tricks checkbox hack
+
+
+  watchout for sending an empty body to the server
+  because of the form not having a name -- key to live inside of
+
+ -->
